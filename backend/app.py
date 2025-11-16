@@ -184,7 +184,7 @@ generator = ChatGroq(model=EMBED_MODEL)
 
 
 app = Flask(__name__)
-CORS(app)  # allow requests from any origin
+CORS(app, origins=[os.getenv("FRONT_END_URL")])  # allow requests from any origin
 
 @app.route('/', methods=['GET'])
 def home():
