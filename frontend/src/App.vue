@@ -126,7 +126,7 @@
     const payload = { title: title, texts: texts, job:job.value};
 
     try {
-      const response = await fetch(`${api}/tailor`, {
+      const response = await fetch(`${api}tailor`, {
         method: "POST", // or "PUT"
         headers: {
           "Content-Type": "application/json", // tell backend it's JSON
@@ -153,7 +153,7 @@
     const payload = { job:job.value};
 
     try {
-      const response = await fetch(`${api}/extract_skills`, {
+      const response = await fetch(`${api}extract_skills`, {
         method: "POST", // or "PUT"
         headers: {
           "Content-Type": "application/json", // tell backend it's JSON
@@ -184,7 +184,7 @@
     }
     formData.append("job", job.value);     // extra text
 
-    const response = await fetch(`${api}/process`, {
+    const response = await fetch(`${api}process`, {
       method: "POST",
       body: formData
     });

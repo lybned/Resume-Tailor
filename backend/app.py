@@ -191,7 +191,7 @@ def home():
     return jsonify({"message": "Backend is running!"}), 200
 
 @app.route('/process', methods=['POST'])
-def process_strings():
+def process():
     #data = request.get_json()  # get JSON body
 
     # Extract strings safely
