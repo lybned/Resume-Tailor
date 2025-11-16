@@ -180,11 +180,11 @@ def process_resume_summary(text):
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_KEY")
 EMBED_MODEL = "openai/gpt-oss-120b" 
 generator = ChatGroq(model=EMBED_MODEL)
-backend_url = "https://resume-tailor-bh6x.vercel.app"
+
 
 
 app = Flask(__name__)
-CORS(app, origins=[backend_url])  # allow requests from any origin
+CORS(app, origins=["https://resume-tailor-bh6x.vercel.app"])  # allow requests from any origin
 
 @app.route('/', methods=['GET'])
 def home():
