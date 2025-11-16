@@ -93,8 +93,11 @@
 </template>
 
 <script setup lang="ts">
+
+
   import { ref } from 'vue'
 
+  const api = import.meta.env.VITE_API_BASE_URL;
   const job = ref('')  // this is your on-screen buffer
   const responseMessage = ref('')
 
@@ -142,7 +145,7 @@
     const payload = { session_id: session_id.value, question: ask_chat.value };
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/chat", {
+      const response = await fetch(`${api}/chat`, {
         method: "POST", // or "PUT"
         headers: {
           "Content-Type": "application/json", // tell backend it's JSON
@@ -174,7 +177,7 @@
     const payload = { title: title, texts: texts, job:job.value};
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/tailor", {
+      const response = await fetch(`${api}/tailor`, {
         method: "POST", // or "PUT"
         headers: {
           "Content-Type": "application/json", // tell backend it's JSON
@@ -201,7 +204,7 @@
     const payload = { job:job.value};
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/extract_skills", {
+      const response = await fetch(`${api}/extract_skills`, {
         method: "POST", // or "PUT"
         headers: {
           "Content-Type": "application/json", // tell backend it's JSON
@@ -230,7 +233,7 @@
     formData.append("file", selectedFile.value);
     formData.append("job", job.value);     // extra text
 
-    const response = await fetch("http://127.0.0.1:5000/process", {
+    const response = await fetch(`${api}/process`, {
       method: "POST",
       body: formData
     });
