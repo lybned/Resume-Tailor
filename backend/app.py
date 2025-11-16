@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import os
 from langchain_groq import ChatGroq
 from dotenv import load_dotenv
@@ -180,17 +180,19 @@ def process_resume_summary(text):
 os.environ["GROQ_API_KEY"] = os.getenv("GROQ_KEY")
 EMBED_MODEL = "openai/gpt-oss-120b" 
 generator = ChatGroq(model=EMBED_MODEL)
-
+backend_url = os.getenv("FRONT_END_URL")
 
 
 app = Flask(__name__)
-CORS(app, origins=[os.getenv("FRONT_END_URL")])  # allow requests from any origin
+CORS(app, origins=[backend_url])  # allow requests from any origin
 
 @app.route('/', methods=['GET'])
+@cross_origin(origin=backend_url)
 def home():
     return jsonify({"message": "Backend is running!"}), 200
 
 @app.route('/process', methods=['POST'])
+@cross_origin(origin=backend_url)
 def process_strings():
     #data = request.get_json()  # get JSON body
 
@@ -221,6 +223,7 @@ def process_strings():
     }), 200
 
 @app.route('/extract_skills', methods=['POST'])
+@cross_origin(origin=backend_url)
 def extract_skills():
     data = request.get_json()
     job = data.get('job') 
@@ -231,6 +234,7 @@ def extract_skills():
     }), 200
 
 @app.route('/tailor', methods=['POST'])
+@cross_origin(origin=backend_url)
 def tailor():
     data = request.get_json()
     title = data.get('title')
