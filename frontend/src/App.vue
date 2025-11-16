@@ -36,7 +36,7 @@
             <div v-if="edit_list[index]">
               <h2 class="text-xl font-bold mb-2 text-left">{{ title_list[index] }}</h2>
               <ul class="list-disc list-inside space-y-1 text-left">
-                <li v-for="(item, index) in content_list[index].split('\n')" :key="index">
+                <li v-for="(item, index2) in content_list[index]?.split('\n')" :key="index2">
                   {{ item }}
                 </li>
               </ul>
@@ -69,26 +69,6 @@
       </div>
       
     </div>
-
-    <!-- 
-    <h2>Ask Questions</h2>
-
-    <textarea
-      v-model="ask_chat"
-      placeholder="Type something here..."
-      rows="5"
-      class="border p-2 w-full"
-    ></textarea>
-
-    <button
-      @click="send_chat"
-      class="mt-2 bg-blue-500 text-black px-4 py-2 rounded"
-    >      Send Buffer to API 2
-    </button>
-
-      <div v-if="ai_response" class="mt-2 whitespace-pre-line">
-        {{ ai_response }}
-      </div>  --> 
   </div>
 </template>
 
@@ -103,70 +83,39 @@
 
   const skillList = ref("")
 
-  const selectedFile = ref(null); // Store the chosen file
+  const selectedFile = ref<File | null>(null);// Store the chosen file
   const progress = ref(0);        // Track upload progress
-
-  const ask_chat = ref('')
-
-  const ai_response = ref("")
 
   const organized_text = ref({})
   const organized_text_mod = ref({})
 
 
-  const title_list_buff = ref([])
-  const content_list_buff  = ref([])
+  const title_list_buff=  ref<string[]>([]);
+  const content_list_buff  =  ref<string[]>([]);
 
-  const title_list = ref([])
-  const content_list  = ref([])
+  const title_list =  ref<string[]>([]);
+  const content_list  =  ref<string[]>([]);
 
-  const edit_list = ref([])
-  const ai_tailor = ref([])
-
-  const tailor_result = ref("")
+  const edit_list = ref<boolean[]>([]);
+  const ai_tailor = ref<string[]>([]);
 
 
-
-  const handleFileSelect = (event) => {
-    selectedFile.value = event.target.files[0] || null;
+  const handleFileSelect = (event: Event) => {
+    const target = event.target as HTMLInputElement;
+    selectedFile.value = target.files?.[0] || null;
     progress.value = 0; // reset progress on new file selection
   };
 
-  function edit_text(index){
-    title_list.value[index] = title_list_buff.value[index]
-    content_list.value[index] = content_list_buff.value[index]
+  function edit_text(index: number){
+    title_list.value[index] = title_list_buff.value[index]!
+    content_list.value[index] = content_list_buff.value[index]!
   }
 
-  function change_edit(index){
+  function change_edit(index: number){
     edit_list.value[index] = !edit_list.value[index]
   }
 
-  async function send_chat(){
-    const payload = { session_id: session_id.value, question: ask_chat.value };
-
-    try {
-      const response = await fetch(`${api}/chat`, {
-        method: "POST", // or "PUT"
-        headers: {
-          "Content-Type": "application/json", // tell backend it's JSON
-        },
-        body: JSON.stringify(payload), // convert JS object to JSON
-      });
-
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const data = await response.json(); // parse JSON response
-      ai_response.value = data["result"]
-      console.log("Response from backend:", data);
-    } catch (error) {
-      console.error("Error sending data:", error);
-    }
-
-  }
-
-  async function tailor_section(index){
+  async function tailor_section(index: number){
     if (job.value.length < 5){
       alert("Make sure job description is filled")
       return ""
@@ -190,7 +139,7 @@
       }
 
       const data = await response.json(); // parse JSON response
-      ai_tailor.value[index] = data["result"]
+      ai_tailor.value[index] = data["result"] 
       
 
       console.log("Response from backend:", data);
@@ -230,7 +179,9 @@
     try{
 
     const formData = new FormData();
-    formData.append("file", selectedFile.value);
+    if (selectedFile.value) {
+      formData.append("file", selectedFile.value);
+    }
     formData.append("job", job.value);     // extra text
 
     const response = await fetch(`${api}/process`, {
