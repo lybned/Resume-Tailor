@@ -3,6 +3,5 @@ flask-cors
 python-dotenv
 langchain-core
 langchain-groq
-fitz
 pymupdf
 frontend
