@@ -187,12 +187,10 @@ app = Flask(__name__)
 CORS(app, origins=[backend_url])  # allow requests from any origin
 
 @app.route('/', methods=['GET'])
-@cross_origin(origin=backend_url)
 def home():
     return jsonify({"message": "Backend is running!"}), 200
 
 @app.route('/process', methods=['POST'])
-@cross_origin(origin=backend_url)
 def process_strings():
     #data = request.get_json()  # get JSON body
 
@@ -223,7 +221,6 @@ def process_strings():
     }), 200
 
 @app.route('/extract_skills', methods=['POST'])
-@cross_origin(origin=backend_url)
 def extract_skills():
     data = request.get_json()
     job = data.get('job') 
@@ -234,7 +231,6 @@ def extract_skills():
     }), 200
 
 @app.route('/tailor', methods=['POST'])
-@cross_origin(origin=backend_url)
 def tailor():
     data = request.get_json()
     title = data.get('title')
